@@ -1,0 +1,23 @@
+name: Docker Image Scaleway
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 23 * * 0,4'
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: |
+        docker login -u anyuser -p ${{ secrets.SCALEWAY_TOKEN }} rg.fr-par.scw.cloud
+        docker build . --file Dockerfile --tag rg.fr-par.scw.cloud/aehrischmon/influx-stats:latest
+        docker push rg.fr-par.scw.cloud/aehrischmon/influx-stats:latest
